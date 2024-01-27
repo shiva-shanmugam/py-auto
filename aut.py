@@ -58,8 +58,11 @@ def target_identification(target_url):
 
             print("Report generated: pentest_report.txt")
 
-    generate_report(target_url, ip_addresses, subdomains, dir_enum_output, virtual_hosts, links, vulnerabilities)
+    generate_report(target_url, ip_addresses, subdomains, dir_enum_output, virtual_hosts, links)
 
+
+def scan_and_enum():
+    pass
 
 if __name__ == "__main__":
 
