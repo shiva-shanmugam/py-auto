@@ -61,10 +61,35 @@ def target_identification(target_url):
     generate_report(target_url, ip_addresses, subdomains, dir_enum_output, virtual_hosts, links)
 
 
-def scan_and_enum():
-    pass
+def scan_and_enum(target_ip,target_url):
 
+    def network_scan(target_ip):
+        try:
+            nmap_output = subprocess.getoutput(f"nmap -sP -p 1-65535 {target_ip}")
+            print("Network Scan Output:")
+            print(nmap_output)
+        except Exception as e:
+            print(f"Error during network scan: {str(e)}")
+    network_scan(target_ip)
+
+    def web_technology_enum(target_url):
+        try:
+            whatweb_output = subprocess.getoutput(f"whatweb {target_url}")
+            print("Web Technology Enumeration Output:")
+            print(whatweb_output)
+        except Exception as e:
+            print(f"Error during web technology enumeration: {str(e)}")
+    web_technology_enum(target_url)
+    def web_app_crawling(target_url):
+        try:
+            gobuster_output = subprocess.getoutput(f"gobuster dir -u {target_url} -w /")
+            print("Web App Crawling Output:")
+            print(gobuster_output)
+        except Exception as e:
+            print(f"Error during web app crawling: {str(e)}")
+    web_app_crawling(target_url)
 if __name__ == "__main__":
-
+    target_ip = input()
     target_url = input()
     target_identification(target_url)
+    scan_and_enum(target_ip,target_url)
