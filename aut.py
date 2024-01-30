@@ -118,8 +118,70 @@ def scan_and_enum(target_ip,target_url):
             print(f"Error during content discovery: {str(e)}")
     content_discovery(target_url)
     
+
+def common_vulns(url,param):
+    def test_sql_injection(url, parameter):
+        payload = "' OR '1'='1' -- "
+        target_url = f"{url}?{param}={payload}"
+
+        try:
+            response = requests.get(target_url)
+            if "error" in response.text.lower() or "exception" in response.text.lower():
+                print(f"Potential SQL injection vulnerability found in: {target_url}")
+            else:
+                print(f"No SQL injection vulnerability found in: {target_url}")
+
+        except requests.RequestException as e:
+            print(f"Error testing SQL injection on {target_url}: {e}")
+    test_sql_injection(target_url,param)
+    def test_xss(url, param):
+        payload = "<script>alert('XSS')</script>"
+
+        target_url = f"{url}?{param}={payload}"
+
+        try:
+            response = requests.get(target_url)
+            if payload in response.text:
+                print(f"Potential XSS vulnerability found in: {target_url}")
+            else:
+                print(f"No XSS vulnerability found in: {target_url}")
+
+        except requests.RequestException as e:
+            print(f"Error testing XSS on {target_url}: {e}")
+    test_xss(target_url,param)
+    def test_csrf(url, param):
+        payload = "<img src='' />"
+        target_url = f"{url}?{param}={payload}"
+
+        try:
+            response = requests.post(target_url)
+            if "CSRF token invalid" in response.text:
+                print(f"Potential CSRF vulnerability found in: {target_url}")
+            else:
+                print(f"No CSRF vulnerability found in: {target_url}")
+
+        except requests.RequestException as e:
+            print(f"Error testing CSRF on {target_url}: {e}")
+    test_csrf(target_url,param)
+    def test_command_injection(url, param):
+        payload = "; ls -la"
+        target_url = f"{url}?{param}={payload}"
+
+        try:
+            response = requests.get(target_url)
+            if "Permission denied" not in response.text:
+                print(f"Potential command injection vulnerability found in: {target_url}")
+            else:
+                print(f"No command injection vulnerability found in: {target_url}")
+
+        except requests.RequestException as e:
+            print(f"Error testing command injection on {target_url}: {e}")
+    test_command_injection(target_url,param)
+
 if __name__ == "__main__":
     target_ip = input()
     target_url = input()
+    param = input()
     target_identification(target_url)
     scan_and_enum(target_ip,target_url)
+    common_vulns(target_url,param)
