@@ -51,7 +51,7 @@ def target_identification(target_url):
             report += f"Directory Enumeration: {dir_enum_output}\n"
             report += f"Virtual Hosts: {virtual_hosts}\n"
             report += f"Discovered Links: {links}\n"
-            report += f"Vulnerabilities: {vulnerabilities}\n"
+            #report += f"Vulnerabilities: {vulnerabilities}\n"
 
             with open("pentest_report.txt", "w") as report_file:
                 report_file.write(report)
@@ -80,6 +80,43 @@ def scan_and_enum(target_ip,target_url):
         except Exception as e:
             print(f"Error during web technology enumeration: {str(e)}")
     web_technology_enum(target_url)
+
+    def ssl_enum(target_url):
+        try:
+            sslscan_output = subprocess.getoutput(f"sslscan {target_url}")
+            print("SSL/TLS Enumeration Output:")
+            print(sslscan_output)
+        except Exception as e:
+            print(f"Error during SSL/TLS enumeration: {str(e)}")
+    ssl_enum(target_url)
+
+    def error_based_enum(target_url):
+        try:
+            response = requests.get(target_url + "?para=invalid_val")
+            print("Error-Based Enumeration Output:")
+            print(response.text)
+        except Exception as e:
+            print(f"Error during error-based enumeration: {str(e)}")
+    error_based_enum(target_url)
+
+    def api_scanning(target_url):
+        try:
+            swagger_response = requests.get(target_url + "/swagger.json")
+            swagger_data = swagger_response.json()
+            print("API Scanning Output:")
+            print(swagger_data)
+        except Exception as e:
+            print(f"Error during API scanning: {str(e)}")
+    api_scanning(target_url)
+
+    def content_discovery(target_url):
+        try:
+            dirsearch_output = subprocess.getoutput(f"dirsearch -u {target_url} -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt")
+            print("Content Discovery Output:")
+            print(dirsearch_output)
+        except Exception as e:
+            print(f"Error during content discovery: {str(e)}")
+    content_discovery(target_url)
     
 if __name__ == "__main__":
     target_ip = input()
