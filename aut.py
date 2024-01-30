@@ -12,7 +12,7 @@ def target_identification(target_url):
     print("Subdomains:")
     print(subdomains)
 
-    dir_enum_output = subprocess.getoutput(f"gobuster dir -u {target_url} -w /")
+    dir_enum_output = subprocess.getoutput(f"gobuster dir -u {target_url} -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt")
     print("Directory Enumeration:")
     print(dir_enum_output)
 
@@ -80,14 +80,7 @@ def scan_and_enum(target_ip,target_url):
         except Exception as e:
             print(f"Error during web technology enumeration: {str(e)}")
     web_technology_enum(target_url)
-    def web_app_crawling(target_url):
-        try:
-            gobuster_output = subprocess.getoutput(f"gobuster dir -u {target_url} -w /")
-            print("Web App Crawling Output:")
-            print(gobuster_output)
-        except Exception as e:
-            print(f"Error during web app crawling: {str(e)}")
-    web_app_crawling(target_url)
+    
 if __name__ == "__main__":
     target_ip = input()
     target_url = input()
